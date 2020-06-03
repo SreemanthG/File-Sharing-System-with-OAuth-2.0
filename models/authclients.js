@@ -13,25 +13,23 @@ var userSchema = new mongoose.Schema({
         trim: true,  
         required: true,
        },
-    password:{
+    //0 - filename, 1 - filetype, 2 - desc
+    accesstype:[],
+    secid:{
         type: String,
         trim: true,  
-        required: true,
+        // required: true,
        },
-    number:{
-        type: Number,
-        trim: true,  
-        required: true,
-       },
-    file:[{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"Files",
-    }]
+    granted:{
+        type:Boolean,
+        trim: true
+    }
 })
-// hash user password before saving into database
-userSchema.pre('save', function(next){
-    this.password = bcrypt.hashSync(this.password, saltRounds);
-    next();
-    });
 
-module.exports = mongoose.model("User",userSchema)
+// hash user password before saving into database
+// userSchema.pre('save', function(next){
+//     this.secid = bcrypt.hashSync(String(this._id), saltRounds);
+//     next();
+//     });
+
+module.exports = mongoose.model("AuthClient",userSchema)

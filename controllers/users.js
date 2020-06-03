@@ -15,12 +15,12 @@ module.exports = {
     },
 
     authenticate: function(req,res,next){
-        User.findOne({emial:req.body.user},function(err,userModel){
+        User.findOne({email:req.body.email},function(err,userModel){
             if (err) {
                 next(err);
                } else {
-                   console.log(req.body.password);
                    console.log(userModel);
+                //    console.log(userModel);
                    
                    
                     if(bcrypt.compareSync(req.body.password, userModel.password)) {

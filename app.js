@@ -4,31 +4,40 @@ var mongoose =require("mongoose");
 var bodyParser = require("body-parser");
 const bcrypt = require('bcrypt');
 var User = require("./models/user");
+var File = require("./models/file");
 var app = express();
 
 mongoose.connect("mongodb://localhost/FileSharingOauth",{ useUnifiedTopology: true ,useNewUrlParser: true});
 var userRoutes = require("./routes/user");
+var fileRoutes = require("./routes/file");
+var oauthRoutes = require("./routes/oauth");
 
 
 app.set("view engine","ejs");
 app.use(express.static(__dirname+"/public"));
 app.use(bodyParser.urlencoded({ extended: true }))
-
+app.use(function(req,res,next){
+    res.locals.id=req.id;
+    next();
+})
 
 //Routes
-app.get("/",function(req,res){
+app.get("/",verifyToken,function(req,res){
     res.json({
         message:"Welcome to the api"
     })
 })
-app.use(userRoutes,verifyToken);
+app.use(userRoutes);
+app.use("/file",verifyToken,fileRoutes);
+app.use("/oauth",oauthRoutes);
 
 // app.post("/test",function(req,res){
 //     // console.log(req.body);
 // })
 
 function verifyToken(req,res,next){
-
+    console.log("entered");
+    
     const bearerHeader = req.headers["authorization"];
     if(typeof bearerHeader !== 'undefined'){
         const bearer = bearerHeader.split(" ")[1];
@@ -36,6 +45,7 @@ function verifyToken(req,res,next){
         jwt.verify(req.token,'secretkey',function(err,authData){
                     if(!err){
                         req.id = authData.id;
+                        // console.log(authData);
                         next();
                     } else{
                         res.sendStatus(403);
