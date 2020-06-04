@@ -11,8 +11,8 @@ mongoose.connect("mongodb://localhost/FileSharingOauth",{ useUnifiedTopology: tr
 var userRoutes = require("./routes/user");
 var fileRoutes = require("./routes/file");
 var oauthRoutes = require("./routes/oauth");
-
-
+var seed = require("./seed");
+seed();
 app.set("view engine","ejs");
 app.use(express.static(__dirname+"/public"));
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -22,7 +22,7 @@ app.use(function(req,res,next){
 })
 
 //Routes
-app.get("/",verifyToken,function(req,res){
+app.get("/",function(req,res){
     res.json({
         message:"Welcome to the api"
     })

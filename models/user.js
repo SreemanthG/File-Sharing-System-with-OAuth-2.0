@@ -1,7 +1,7 @@
 var mongoose = require("mongoose");
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
-
+var count=0;
 var userSchema = new mongoose.Schema({
     username: {
         type: String,
@@ -29,9 +29,14 @@ var userSchema = new mongoose.Schema({
     }]
 })
 // hash user password before saving into database
-userSchema.pre('save', function(next){
-    this.password = bcrypt.hashSync(this.password, saltRounds);
-    next();
-    });
+// if(count===0){
+//     userSchema.pre('save', function(next){
+//         this.password = bcrypt.hashSync(this.password, saltRounds);
+//         count++;
+
+//         next();
+//         });
+// }
+
 
 module.exports = mongoose.model("User",userSchema)

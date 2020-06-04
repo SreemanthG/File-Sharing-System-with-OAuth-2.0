@@ -22,7 +22,7 @@ module.exports = {
             if (err) {
                 next(err);
                } else { 
-                
+                console.log(userModel.password)
                 bcrypt.compare(req.body.password, userModel.password, function(err, result) {
                     if(result){
                         AuthClient.findById(req.params.pubid,function(err,Authinfo){
